@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3681674911012127585
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3681674911012127584}
+  - component: {fileID: 3681674911012127591}
+  - component: {fileID: 3681674911012127590}
+  m_Layer: 5
+  m_Name: Dealer
+  m_TagString: Dealer
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3681674911012127584
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3681674911012127585}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3681674911012127591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3681674911012127585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a55705e0f83431f4c885b5c152afa468, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  matchMaking: 0
+  Players: []
+  cardSprites:
+  - {fileID: 21300000, guid: 8c77057f040559d45ad61bd12e3d0dad, type: 3}
+  - {fileID: 21300000, guid: a6800c3adcbb92f4a88db37e7ea0a0d6, type: 3}
+  - {fileID: 21300000, guid: fe2a3b57986da4b458ade05558df3ac5, type: 3}
+  - {fileID: 21300000, guid: 3cb447b2297a7b1499f3f8146a161047, type: 3}
+  - {fileID: 21300000, guid: aaf090c13ecc9314a96a2eefb33b3669, type: 3}
+  - {fileID: 21300000, guid: 82d2c01addcc3cd4a819996a3e6433e0, type: 3}
+  - {fileID: 21300000, guid: f856ab6d4be503e49bca701fcf71de83, type: 3}
+  - {fileID: 21300000, guid: 7be849b71f0b45344b2d1937f49a07f7, type: 3}
+  - {fileID: 21300000, guid: e3d4efa45ab39104980513a03aa03ee5, type: 3}
+  - {fileID: 21300000, guid: 782a5e4039e62004f9bccc55acd9ba2b, type: 3}
+  - {fileID: 21300000, guid: 839fc59ecbf29f043b8b60d1d4760275, type: 3}
+  - {fileID: 21300000, guid: 7718b23f29e2f61408ff6f0bb09b3be5, type: 3}
+  - {fileID: 21300000, guid: 129fd9f0a78499841bc83a2849e274a1, type: 3}
+  - {fileID: 21300000, guid: b9b64d83c6a5b9345b8e9a6ca289c83f, type: 3}
+  - {fileID: 21300000, guid: 3f0f0b85b0b7db84f8e0d21b1664a728, type: 3}
+  - {fileID: 21300000, guid: 4c9461576baecc2459abd5df0a547e7c, type: 3}
+  - {fileID: 21300000, guid: 8f97e9e7828d12b47842a95775d9883a, type: 3}
+  - {fileID: 21300000, guid: 6d35a7b0c9689c446ba4ad2a3823330d, type: 3}
+  - {fileID: 21300000, guid: 0f2b4930d0c346440913ff141f13dbb4, type: 3}
+  - {fileID: 21300000, guid: 4d57c85f91e56234da1cf3116e0e5319, type: 3}
+  - {fileID: 21300000, guid: bae93ae48f7848e4d9aa03ab4536969a, type: 3}
+  - {fileID: 21300000, guid: 7bfc9ec93b50baf43b165f0833fcbc4c, type: 3}
+  - {fileID: 21300000, guid: 0080d222de758b646af096abc3208ab5, type: 3}
+  - {fileID: 21300000, guid: 0e53ddfc3d9c4e741a4e5840417a02cd, type: 3}
+  - {fileID: 21300000, guid: b346276317ec80148bf450f83fb638be, type: 3}
+  - {fileID: 21300000, guid: 2659a6b1aa329654db652963970184b3, type: 3}
+  - {fileID: 21300000, guid: 3031a6eb2bb9c4249aa4021294d57741, type: 3}
+  - {fileID: 21300000, guid: 9f176cda5193611409111eeba6acac24, type: 3}
+  - {fileID: 21300000, guid: 1df8dff301ffce245ae871f9d7558752, type: 3}
+  - {fileID: 21300000, guid: 54c140fe269c9ae4686ece85fc9b21d9, type: 3}
+  - {fileID: 21300000, guid: 23db57d537f954c489bd41962642d03a, type: 3}
+  - {fileID: 21300000, guid: 149afee6317cb4040a420a0f5b77cd2f, type: 3}
+  - {fileID: 21300000, guid: b799cc1d1548733408794000ff523935, type: 3}
+  - {fileID: 21300000, guid: 38e6b31c1d2bad547b4fbae040db45ae, type: 3}
+  - {fileID: 21300000, guid: 10cdc35fa2c32bc478db68858272f5c3, type: 3}
+  - {fileID: 21300000, guid: ee642087ccadff84e8fac145634d4ebf, type: 3}
+  - {fileID: 21300000, guid: acd5666e19b7f534f9a083ad7409f945, type: 3}
+  - {fileID: 21300000, guid: 876ea663d6540a54c954ac8455ef27e9, type: 3}
+  - {fileID: 21300000, guid: 074756009f5e212489c5a8325e20bb98, type: 3}
+  - {fileID: 21300000, guid: b7d7544b71fed0a439c8cf519a0e9247, type: 3}
+  - {fileID: 21300000, guid: 96c40615e863c7043af32f0cef874901, type: 3}
+  - {fileID: 21300000, guid: 53704f753355f9346819e7f64d19aa05, type: 3}
+  - {fileID: 21300000, guid: a325e726d4d6e3142bbd038f25768f07, type: 3}
+  - {fileID: 21300000, guid: 22b9e776b04995e49ba724e3e8c5cfa0, type: 3}
+  - {fileID: 21300000, guid: c260de5041aac2d479e5c9507aa1302b, type: 3}
+  - {fileID: 21300000, guid: 90e2118a23dade240938d8a06cd129ec, type: 3}
+  - {fileID: 21300000, guid: 053d0cab2ed833f4cad5fc9820de0662, type: 3}
+  - {fileID: 21300000, guid: a6541f49fe524b146a33e95e1bec66bb, type: 3}
+  - {fileID: 21300000, guid: 9742a1d1f11e8f14189262afb979532c, type: 3}
+  - {fileID: 21300000, guid: d90a500bd8d05c34981cdd5efa3a16a2, type: 3}
+  - {fileID: 21300000, guid: a5cea0df7a2d5494bb1f5527d48bd001, type: 3}
+  - {fileID: 21300000, guid: 84173bde888acfb478bd8ec2102cddab, type: 3}
+  - {fileID: 21300000, guid: 830c8a4873493af41bad99b1115b2254, type: 3}
+  current: 0
+  selectedNum: 0
+  selectedSymbol: 0
+  maxRound: 10
+  currentScore: 
+  roundScore: 
+  selected: []
+  turnCount: 0
+  winner: {fileID: 0}
+  scorecards:
+  - {fileID: 0}
+  - {fileID: 0}
+  hands:
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!114 &3681674911012127590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3681674911012127585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
