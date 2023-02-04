@@ -187,14 +187,16 @@ public class DealerScript : MonoBehaviourPunCallbacks
         MainScores.text = currentScore[0].ToString();
         var OpponentScores = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>();
         OpponentScores.text = currentScore[1].ToString();
-        for(int i = 0; i < 2; i++)
+        
+        var MainRounds = GameObject.FindGameObjectWithTag("MainRoundScore").GetComponent<TextMeshProUGUI>();
+        MainRounds.text = roundScore[0].ToString();
+        var OpponentRounds = GameObject.FindGameObjectWithTag("RoundScore").GetComponent<TextMeshProUGUI>();
+        OpponentRounds.text = roundScore[1].ToString();
+        
+        for (int i = 0; i < 2; i++)
         {
             hands[i]=cards[i].GetComponent<Image>();
         }
-        // for(int i=0;i<currentScore.Count;i++)
-        // {
-        //     scorecards[i].text=currentScore[i].ToString();
-        // }
         if(progress == true)
         {
             selected.Clear();
