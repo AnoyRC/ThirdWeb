@@ -30,7 +30,7 @@ public class StartManager : MonoBehaviour
            provider= WalletProvider.MetaMask,
            chainId=80001
         });
-        string addressShort=address.Substring(0,5)+"....."+address.Substring(address.Length-4,address.Length-1);
+        string addressShort=address[..5] + "....." + address[(address.Length-5)..];
         Debug.Log(addressShort);
         addressTxt.text=addressShort;
     }
