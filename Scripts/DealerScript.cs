@@ -145,6 +145,8 @@ public class DealerScript : MonoBehaviourPunCallbacks
     PhotonView PV;
     public TextMeshProUGUI[] scorecards;
     public Image[] hands;
+    public Image[] handsOpponent;
+    private int k=0,l=0;
     // Start is called before the first frame update
     void Start()
     {
@@ -181,7 +183,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
             }
             matchMaking = true;
         }
-        var cards=GameObject.FindGameObjectsWithTag("Card");
+
         
         var MainScores = GameObject.FindGameObjectWithTag("MainPlayerScore").GetComponent<TextMeshProUGUI>();
         MainScores.text = currentScore[0].ToString();
@@ -193,10 +195,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
         var OpponentRounds = GameObject.FindGameObjectWithTag("RoundScore").GetComponent<TextMeshProUGUI>();
         OpponentRounds.text = roundScore[1].ToString();
         
-        for (int i = 0; i < 2; i++)
-        {
-            hands[i]=cards[i].GetComponent<Image>();
-        }
+
         if(progress == true)
         {
             selected.Clear();
@@ -327,12 +326,18 @@ public class DealerScript : MonoBehaviourPunCallbacks
                 }
                 if(cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 0)
                 {
-                    hands[0].sprite=cardSprites[i];
+                    hands[k].sprite=cardSprites[i];
+                    if(k>0)
+                        hands[k].GetComponent<Image>().enabled=true;
+                    k++;
                     break;
                 }
                 if(cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1)
                 {
-                    hands[1].sprite=cardSprites[i];
+                    handsOpponent[l].sprite=cardSprites[i];
+                    if(l>0)
+                        handsOpponent[l].GetComponent<Image>().enabled=true;
+                    l++;
                     break;
                 }
             }
