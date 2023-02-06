@@ -20,7 +20,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
     public int current = 0;
     public int selectedNum = 0;
     public char selectedSymbol = '\0';
-    
+
     public List<Tuple<int, char>> resetCards = new List<Tuple<int, char>>()
     {
         new Tuple<int, char>(1,'C'),
@@ -136,7 +136,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
     bool progress = false;
     public List<int> currentScore = new List<int>();
     public List<int> roundScore = new List<int>();
-    public List<GameObject> selected =  new List<GameObject>();
+    public List<GameObject> selected = new List<GameObject>();
     int minScore = 100;
     public int turnCount = 0;
     public GameObject winner;
@@ -146,7 +146,11 @@ public class DealerScript : MonoBehaviourPunCallbacks
     public TextMeshProUGUI[] scorecards;
     public Image[] hands;
     public Image[] handsOpponent;
-    private int k=0,l=0;
+    private int k = 0, l = 0;
+    public Sprite cardBack;
+    public GameObject[] Notifiers;
+    public GameObject HiddenCover;
+    public TextMeshProUGUI TurnNotifier;
     // Start is called before the first frame update
     void Start()
     {
@@ -162,13 +166,13 @@ public class DealerScript : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        if(Players.Length != 2)
+        if (Players.Length != 2)
         {
             Players = GameObject.FindGameObjectsWithTag("Players");
         }
-        if(Players.Length == 2 && matchMaking == false)
+        if (Players.Length == 2 && matchMaking == false)
         {
-            if(PhotonNetwork.IsMasterClient == false)
+            if (PhotonNetwork.IsMasterClient == false)
             {
                 current = 1;
             }
@@ -183,25 +187,32 @@ public class DealerScript : MonoBehaviourPunCallbacks
             }
             matchMaking = true;
         }
-
-        
-        var MainScores = GameObject.FindGameObjectWithTag("MainPlayerScore").GetComponent<TextMeshProUGUI>();
-        MainScores.text = currentScore[0].ToString();
-        var OpponentScores = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>();
-        OpponentScores.text = currentScore[1].ToString();
+        if (current == 0)
+        {
+            TurnNotifier.text = "Your Turn...";
+        }
+        else
+        {
+            TurnNotifier.text = "Waiting for opponent...";         
+        }
         
         var MainRounds = GameObject.FindGameObjectWithTag("MainRoundScore").GetComponent<TextMeshProUGUI>();
         MainRounds.text = roundScore[0].ToString();
         var OpponentRounds = GameObject.FindGameObjectWithTag("RoundScore").GetComponent<TextMeshProUGUI>();
         OpponentRounds.text = roundScore[1].ToString();
-        
 
-        if(progress == true)
+
+        if (progress == true)
         {
             selected.Clear();
-            for (int i = 0;i < currentScore.Count; i++)
+            HiddenCover.SetActive(false);
+            var MainScores = GameObject.FindGameObjectWithTag("MainPlayerScore").GetComponent<TextMeshProUGUI>();
+            MainScores.text = currentScore[0].ToString();
+            var OpponentScores = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>();
+            OpponentScores.text = currentScore[1].ToString();
+            for (int i = 0; i < currentScore.Count; i++)
             {
-                if (Mathf.Abs(currentScore[i]-21) < minScore && currentScore[i]-21 <= 0)
+                if (Mathf.Abs(currentScore[i] - 21) < minScore && currentScore[i] - 21 <= 0)
                 {
                     minScore = Mathf.Abs(currentScore[i] - 21);
                     selectedScore = currentScore[i];
@@ -227,15 +238,30 @@ public class DealerScript : MonoBehaviourPunCallbacks
                 }
                 currentScore[i] = 0;
             }
+            foreach (GameObject roundWinner in selected)
+            {
+                if (GameObject.ReferenceEquals(roundWinner, Players[0]))
+                {
+                    Notifiers[0].GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 1f);
+                    Notifiers[0].GetComponentInChildren<TextMeshProUGUI>().text = "+1";
+                    Notifiers[0].GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 1, 1, 1f);
+                }
+                if (GameObject.ReferenceEquals(roundWinner, Players[1]))
+                {
+                    Notifiers[1].GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 1f);
+                    Notifiers[1].GetComponentInChildren<TextMeshProUGUI>().text = "+1";
+                    Notifiers[1].GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 1, 1, 1f);
+                }
+            }
             currentRound++;
             int maxScore = 0;
-            if(currentRound == maxRound)
+            if (currentRound == maxRound)
             {
                 IEnumerable<int> duplicates = roundScore.GroupBy(x => x)
                                         .Where(g => g.Count() > 1)
                                         .Select(x => x.Key);
 
-                if(duplicates.Count() > 0)
+                if (duplicates.Count() > 0)
                 {
                     maxRound++;
                 }
@@ -249,7 +275,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
                             winner = Players[i];
                         }
                     }
-                }                
+                }
             }
             foreach (GameObject player in Players)
             {
@@ -258,10 +284,12 @@ public class DealerScript : MonoBehaviourPunCallbacks
             turnCount = 0;
             progress = false;
             minScore = 100;
+            k = 0;
+            l = 0;
         }
     }
 
-    public void checkRound ()
+    public void checkRound()
     {
         if (turnCount == Players.Length * 6)
         {
@@ -275,7 +303,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
         {
             if (turnCaller[player] == false)
             {
-                progress = true; 
+                progress = true;
             }
             else
             {
@@ -286,67 +314,92 @@ public class DealerScript : MonoBehaviourPunCallbacks
 
     public void Hit()
     {
-            turnCaller[Players[current]] = true;
-            
-            turnCount++;
-            var random = new System.Random(seed+=1000);
-            var index = random.Next(cards.Count);
-            selectedNum = cards[index].Item1;
-            selectedSymbol = cards[index].Item2;
-            
-            cards.Remove(cards[index]);
-            if (cards.Count == 0)
-                cards = new List<Tuple<int, char>>(resetCards);
-            if(selectedNum == 1)
+        HiddenCover.SetActive(true);
+        if (k == 0 && l == 0)
+        {
+            hands[0].sprite = cardBack;
+            handsOpponent[0].sprite = cardBack;
+            for (int i = 1; i < hands.Length; i++)
             {
-                if(currentScore[current] + 11 > 21)
-                {
-                    currentScore[current] += selectedNum;
-                }
-                else
-                {
-                    currentScore[current] += 11;
-                }
+                hands[i].GetComponent<Image>().enabled = false;
+                hands[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+                handsOpponent[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+                handsOpponent[i].GetComponent<Image>().enabled = false;
             }
-            else {
-                currentScore[current] += selectedNum > 10 ? 10 : selectedNum;
-            }
+        }
+        var OpponentScores = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>();
+        OpponentScores.text = "?";
+        turnCaller[Players[current]] = true;
+        turnCount++;
+        var random = new System.Random(seed += 1000);
+        var index = random.Next(cards.Count);
+        selectedNum = cards[index].Item1;
+        selectedSymbol = cards[index].Item2;
 
-            for(int i=0;i<cardSprites.Length;i++){
-                // Debug.Log("Symbol"+cardSprites[i].name);
-                // Debug.Log("Symbol"+cardSprites[i].name.Contains(selectedSymbol));
-                // Debug.Log("Num"+cardSprites[i].name.Contains(Convert.ToChar(selectedNum)));
-                string str;
-                if(selectedNum.ToString().Length==1){
-                    str=selectedNum.ToString();
-                }
-                else
-                {
-                    str=selectedNum.ToString();
-                }
-                if(cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 0)
-                {
-                    hands[k].sprite=cardSprites[i];
-                    if(k>0)
-                        hands[k].GetComponent<Image>().enabled=true;
-                    k++;
-                    break;
-                }
-                if(cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1)
-                {
-                    handsOpponent[l].sprite=cardSprites[i];
-                    if(l>0)
-                        handsOpponent[l].GetComponent<Image>().enabled=true;
-                    l++;
-                    break;
-                }
+        cards.Remove(cards[index]);
+        if (cards.Count == 0)
+        {
+            cards = new List<Tuple<int, char>>(resetCards);
+            Notifiers[current == 0 ? 1 : 0].GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 1f);
+            Notifiers[current == 0 ? 1 : 0].GetComponentInChildren<TextMeshProUGUI>().text = "Reshuffling";
+            Notifiers[current == 0 ? 1 : 0].GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 1, 1, 1f);
+        }
+        if (selectedNum == 1)
+        {
+            if (currentScore[current] + 11 > 21)
+            {
+                currentScore[current] += selectedNum;
             }
-            
-            current++;
-            if (current == Players.Length) {
-                current = 0;
+            else
+            {
+                currentScore[current] += 11;
             }
-            checkRound();
+        }
+        else
+        {
+            currentScore[current] += selectedNum > 10 ? 10 : selectedNum;
+        }
+        Notifiers[current].GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 1f);
+        Notifiers[current].GetComponentInChildren<TextMeshProUGUI>().text = "Hit";
+        Notifiers[current].GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 1, 1, 1f);
+        for (int i = 0; i < cardSprites.Length; i++)
+        {
+            string str;
+            if (selectedNum.ToString().Length == 1)
+            {
+                str = selectedNum.ToString();
+            }
+            else
+            {
+                str = selectedNum.ToString();
+            }
+            if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 0)
+            {
+                hands[k].sprite = cardSprites[i];
+                hands[k].GetComponent<Image>().enabled = true;
+                if (k > 1)
+                    hands[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                k++;
+                break;
+            }
+            if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1)
+            {
+                handsOpponent[l].sprite = cardSprites[i];
+                handsOpponent[l].GetComponent<Image>().enabled = true;
+                if (l > 1)
+                    handsOpponent[l - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                l++;
+                break;
+            }
+        }
+        var MainScores = GameObject.FindGameObjectWithTag("MainPlayerScore").GetComponent<TextMeshProUGUI>();
+        MainScores.text = currentScore[0].ToString();
+        current++;
+        if (current == Players.Length)
+        {
+            current = 0;
+        }
+        checkRound();
     }
 
     [PunRPC]
@@ -354,17 +407,35 @@ public class DealerScript : MonoBehaviourPunCallbacks
     {
         seed = getSeed;
     }
-    
+
     public void Stand()
     {
-            turnCaller[Players[current]] = false;
-            current++;
-            turnCount++;
-            if (current == Players.Length)
+        HiddenCover.SetActive(true);
+        var MainScores = GameObject.FindGameObjectWithTag("MainPlayerScore").GetComponent<TextMeshProUGUI>();
+        MainScores.text = currentScore[0].ToString();
+        var OpponentScores = GameObject.FindGameObjectWithTag("Score").GetComponent<TextMeshProUGUI>();
+        OpponentScores.text = "?";
+        if (k == 0 && l == 0)
+        {
+            hands[0].sprite = cardBack;
+            handsOpponent[0].sprite = cardBack;
+            for (int i = 1; i < hands.Length; i++)
             {
-                current = 0;
+                hands[i].GetComponent<Image>().enabled = false;
+                handsOpponent[i].GetComponent<Image>().enabled = false;
             }
-            checkRound();
-        
+        }
+        Notifiers[current].GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 1f);
+        Notifiers[current].GetComponentInChildren<TextMeshProUGUI>().text = "STAND";
+        Notifiers[current].GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 1, 1, 1f);
+        turnCaller[Players[current]] = false;
+        current++;
+        turnCount++;
+        if (current == Players.Length)
+        {
+            current = 0;
+        }
+        checkRound();
+
     }
 }
