@@ -22,15 +22,15 @@ public class ConnectingWindow : MonoBehaviour
         var dealerScript = Dealer.GetComponent<DealerScript>();
         if (dealerScript.Players.Length == 2)
         {
-            gameObject.GetComponent<Image>().color -= new Color(0, 0, 0, 0.0025f);
-            gameObject.GetComponentInChildren<TextMeshProUGUI>().color -= new Color(1, 1, 1, 0.0025f);
+            gameObject.GetComponent<Image>().color -= new Color(0, 0, 0, 0.005f);
+            gameObject.GetComponentInChildren<TextMeshProUGUI>().color -= new Color(1, 1, 1, 0.005f);
             StartCoroutine(Remove());
         }
     }
 
     IEnumerator Remove()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
         gameObject.SetActive(false);
     }
 
