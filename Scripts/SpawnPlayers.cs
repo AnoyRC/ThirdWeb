@@ -7,7 +7,7 @@ public class SpawnPlayers : MonoBehaviourPunCallbacks
 {
     public GameObject playerPrefab;
     public GameObject dealer;
-    public GameObject Canvas;
+    public GameObject spawn;
     public GameObject[] SpawnPoints;
     // Start is called before the first frame update
     void Start()
@@ -22,7 +22,7 @@ public class SpawnPlayers : MonoBehaviourPunCallbacks
         GameObject[] Players = GameObject.FindGameObjectsWithTag("Players");
         for (int i = 0; i < Players.Length; i++)
         {
-            Players[i].transform.SetParent(Canvas.transform);
+            Players[i].transform.SetParent(spawn.transform);
             Players[i].transform.position = SpawnPoints[i].transform.position;
         }
 
