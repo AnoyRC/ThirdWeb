@@ -859,6 +859,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 890492971}
     - target: {fileID: 3681674911012127591, guid: 01c0235a9e70be14280614cbca9ce790, type: 3}
+      propertyPath: WinnerDialog
+      value: 
+      objectReference: {fileID: 479944092}
+    - target: {fileID: 3681674911012127591, guid: 01c0235a9e70be14280614cbca9ce790, type: 3}
       propertyPath: hand.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -4160,7 +4164,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2027335307}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 479944096}
+        m_TargetAssemblyTypeName: WinnerWindow, Assembly-CSharp
+        m_MethodName: loadScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2027335307
 MonoBehaviour:
   m_ObjectHideFlags: 0
