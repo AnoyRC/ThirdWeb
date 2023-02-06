@@ -151,6 +151,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
     public GameObject[] Notifiers;
     public GameObject HiddenCover;
     public TextMeshProUGUI TurnNotifier;
+    public GameObject WinnerDialog;
     // Start is called before the first frame update
     void Start()
     {
@@ -166,6 +167,10 @@ public class DealerScript : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
+        if (winner)
+        {
+            WinnerDialog.SetActive(true);
+        }
         if (Players.Length != 2)
         {
             Players = GameObject.FindGameObjectsWithTag("Players");
