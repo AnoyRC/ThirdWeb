@@ -16,7 +16,7 @@ public class LerpOpacity : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.GetComponent<Image>().color -= new Color(0, 0, 0, 0.0015f);
-        gameObject.GetComponentInChildren<TextMeshProUGUI>().color -= new Color(0, 0, 0, 0.0015f);
+        gameObject.GetComponent<Image>().color -= new Color(0, 0, 0, 0.004f);
+        gameObject.GetComponentInChildren<TextMeshProUGUI>().color -= new Color(0, 0, 0, 0.004f);
     }
 }
