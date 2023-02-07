@@ -36,6 +36,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     {
         Debug.Log("Connected to Master Server");
         connected = true;
+        CheckConnected();
 
     }
 
@@ -45,4 +46,9 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         ConnectWindow.SetActive(false);
     }
 
+    public async void CheckConnected()
+    {
+        bool isConnected=await ThirdWebManager.Instance.SDK.wallet.IsConnected();
+        Debug.Log(isConnected);
+    }
 }
