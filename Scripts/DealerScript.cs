@@ -152,6 +152,9 @@ public class DealerScript : MonoBehaviourPunCallbacks
     public GameObject HiddenCover;
     public TextMeshProUGUI TurnNotifier;
     public GameObject WinnerDialog;
+    public GameObject[] Timers;
+    float timeRemaining = 8;
+    Coroutine lastRoutine;
     // Start is called before the first frame update
     void Start()
     {
@@ -169,6 +172,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
     {
         if (winner)
         {
+            PhotonNetwork.Disconnect();
             WinnerDialog.SetActive(true);
         }
         if (Players.Length != 2)
@@ -190,6 +194,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
                 currentScore.Add(0);
                 roundScore.Add(0);
             }
+            lastRoutine = StartCoroutine(CountDown());
             matchMaking = true;
         }
         if (current == 0)
@@ -200,6 +205,17 @@ public class DealerScript : MonoBehaviourPunCallbacks
         {
             TurnNotifier.text = "Waiting for opponent...";         
         }
+
+        if(matchMaking == true && Players.Length == 2)
+        {
+            timeRemaining -= Time.deltaTime;
+        }
+
+ 
+        Timers[current].GetComponent<Slider>().value = (timeRemaining / 8);
+        Timers[current].SetActive(true);
+        Timers[current == 0 ? 1 : 0].SetActive(false);
+        
         
         var MainRounds = GameObject.FindGameObjectWithTag("MainRoundScore").GetComponent<TextMeshProUGUI>();
         MainRounds.text = roundScore[0].ToString();
@@ -317,14 +333,25 @@ public class DealerScript : MonoBehaviourPunCallbacks
         }
     }
 
+    IEnumerator CountDown()
+    {
+        yield return new WaitForSeconds(8);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("RPC_Stand", RpcTarget.AllBuffered);
+        }
+    }
+    
     public void Hit()
     {
+        StopCoroutine(lastRoutine);
+        timeRemaining = 8;
         HiddenCover.SetActive(true);
         if (k == 0 && l == 0)
         {
             hands[0].sprite = cardBack;
             handsOpponent[0].sprite = cardBack;
-            for (int i = 1; i < hands.Length; i++)
+            for (int i = 0; i < hands.Length; i++)
             {
                 hands[i].GetComponent<Image>().enabled = false;
                 hands[i].GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
@@ -405,6 +432,8 @@ public class DealerScript : MonoBehaviourPunCallbacks
             current = 0;
         }
         checkRound();
+        if(PhotonNetwork.IsMasterClient)
+            lastRoutine = StartCoroutine(CountDown());
     }
 
     [PunRPC]
@@ -415,6 +444,8 @@ public class DealerScript : MonoBehaviourPunCallbacks
 
     public void Stand()
     {
+        StopCoroutine(lastRoutine);
+        timeRemaining = 8;
         HiddenCover.SetActive(true);
         var MainScores = GameObject.FindGameObjectWithTag("MainPlayerScore").GetComponent<TextMeshProUGUI>();
         MainScores.text = currentScore[0].ToString();
@@ -441,6 +472,21 @@ public class DealerScript : MonoBehaviourPunCallbacks
             current = 0;
         }
         checkRound();
-
+        if(PhotonNetwork.IsMasterClient)
+            lastRoutine = StartCoroutine(CountDown());
+    }
+    
+    [PunRPC]
+    public void RPC_Stand()
+    {
+        Stand();
+        Debug.Log("Stand");
+    }
+    
+    [PunRPC]
+    public void RPC_Hit()
+    {
+        Hit();
+        Debug.Log("Hit");
     }
 }
