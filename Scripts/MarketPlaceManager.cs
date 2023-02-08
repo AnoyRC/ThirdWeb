@@ -5,6 +5,7 @@ using TMPro;
 using Thirdweb;
 using Photon.Pun;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 public class MarketPlaceManager : MonoBehaviour
 {
@@ -23,10 +24,7 @@ public class MarketPlaceManager : MonoBehaviour
     void Start()
     {
         CheckConnected();
-//        Buy100.onClick.AddListener(delegate{BuyToken("100");});
-//        Buy200.onClick.AddListener(delegate{BuyToken("200");});
-//        Buy500.onClick.AddListener(delegate{BuyToken("500");});
-//        Buy1000.onClick.AddListener(delegate{BuyToken("1000");});
+//
     }
 
     // Update is called once per frame
@@ -57,5 +55,19 @@ public class MarketPlaceManager : MonoBehaviour
         var x=await ThirdWebManager.Instance.SDK.wallet.GetBalance("0x3c988602f42C894a1f5B08491b03EE6F2C261CAb");
         balance=x.displayValue;
         Debug.Log(x.displayValue);
+    }
+
+    async Task<Pack> GetPackContract()
+    {
+        return  ThirdWebManager.Instance.SDK.GetContract("0x338656979086953eb44eC4Fb39649A4e06742521").pack;
+    }
+
+    async Task<ERC1155Reward> OpenPack()
+    {
+        Pack packContract=await GetPackContract();
+
+        var result=await packContract.Open("0","1");
+
+        return result.erc1155Rewards[0];
     }
 }
