@@ -6,6 +6,8 @@ using Thirdweb;
 using Photon.Pun;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
+using System.Linq.Expressions;
 
 public class MarketPlaceManager : MonoBehaviour
 {
@@ -15,11 +17,6 @@ public class MarketPlaceManager : MonoBehaviour
     string addressShort="0x000.....00000";
     public TextMeshProUGUI tokenBalance;
     string balance="0";
-    public Button Buy;
-    public Button Buy100;
-    public Button Buy200;
-    public Button Buy500;
-    public Button Buy1000;
     // Start is called before the first frame update
     void Start()
     {
@@ -57,17 +54,52 @@ public class MarketPlaceManager : MonoBehaviour
         Debug.Log(x.displayValue);
     }
 
-    async Task<Pack> GetPackContract()
+    Pack GetPackContract(string listing)
     {
-        return  ThirdWebManager.Instance.SDK.GetContract("0x338656979086953eb44eC4Fb39649A4e06742521").pack;
+        return listing == "3" ? ThirdWebManager.Instance.SDK.GetContract("0x2dDCb0F088312eEa656783FCbdC7e20F8Fd9cbE5").pack :
+             ThirdWebManager.Instance.SDK.GetContract("0x338656979086953eb44eC4Fb39649A4e06742521").pack;
     }
 
-    async Task<ERC1155Reward> OpenPack()
+    async Task<ERC1155Reward> OpenPack(string listing)
     {
-        Pack packContract=await GetPackContract();
-
+        Pack packContract=GetPackContract(listing);
         var result=await packContract.Open("0","1");
-
         return result.erc1155Rewards[0];
+    }
+    
+    Marketplace GetMarketPlaceContract()
+    {
+        return ThirdWebManager.Instance.SDK.GetContract("0x0e5b7953097620b4d5B304eDBA8B94D21dA088Ad").marketplace;
+    }
+
+    async Task BuyPackFromMarketPlace(string listing)
+    {
+        Debug.Log("Purchasing Pack from Marketplace");
+        Marketplace marketplace = GetMarketPlaceContract();
+        await marketplace.BuyListing(listing, 1);
+        Debug.Log("Purchase Complete");
+    }
+
+    async Task BuyAndOpenPack(string listing)
+    {
+        try
+        {
+            await BuyPackFromMarketPlace(listing);
+            await OpenPack(listing);
+        }
+        catch (System.Exception error)
+        {
+            Debug.Log(error);
+        }
+    }
+
+    public async void BuyLootbox(string listing)
+    {
+        await BuyAndOpenPack(listing);
+    }
+
+    public void ToMainMenu()
+    {
+        PhotonNetwork.LoadLevel("SampleScene");
     }
 }
