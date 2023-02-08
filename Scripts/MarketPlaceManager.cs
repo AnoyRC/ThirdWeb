@@ -23,10 +23,10 @@ public class MarketPlaceManager : MonoBehaviour
     void Start()
     {
         CheckConnected();
-        Buy100.onClick.AddListener(delegate{BuyToken("100");});
-        Buy200.onClick.AddListener(delegate{BuyToken("200");});
-        Buy500.onClick.AddListener(delegate{BuyToken("500");});
-        Buy1000.onClick.AddListener(delegate{BuyToken("1000");});
+//        Buy100.onClick.AddListener(delegate{BuyToken("100");});
+//        Buy200.onClick.AddListener(delegate{BuyToken("200");});
+//        Buy500.onClick.AddListener(delegate{BuyToken("500");});
+//        Buy1000.onClick.AddListener(delegate{BuyToken("1000");});
     }
 
     // Update is called once per frame
