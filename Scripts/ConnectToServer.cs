@@ -69,6 +69,10 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
 
     }
+    public void ToMarketPlace()
+    {
+        PhotonNetwork.LoadLevel("MarketPlaceToken");
+    }
 
     public async void BuyToken()
     {
