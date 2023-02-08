@@ -345,7 +345,9 @@ public class DealerScript : MonoBehaviourPunCallbacks
     
     public void Hit()
     {
-        StopCoroutine(lastRoutine);
+        if (lastRoutine != null)
+            StopCoroutine(lastRoutine);
+        
         timeRemaining = 8;
         HiddenCover.SetActive(true);
         if (k == 0 && l == 0)
@@ -445,7 +447,9 @@ public class DealerScript : MonoBehaviourPunCallbacks
 
     public void Stand()
     {
-        StopCoroutine(lastRoutine);
+        if (lastRoutine != null)
+            StopCoroutine(lastRoutine);
+ 
         timeRemaining = 8;
         HiddenCover.SetActive(true);
         var MainScores = GameObject.FindGameObjectWithTag("MainPlayerScore").GetComponent<TextMeshProUGUI>();
