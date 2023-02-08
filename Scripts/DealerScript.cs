@@ -194,7 +194,10 @@ public class DealerScript : MonoBehaviourPunCallbacks
                 currentScore.Add(0);
                 roundScore.Add(0);
             }
-            lastRoutine = StartCoroutine(CountDown());
+            if (current == 0)
+            {
+                lastRoutine = StartCoroutine(CountDown());
+            }
             matchMaking = true;
         }
         if (current == 0)
@@ -336,10 +339,8 @@ public class DealerScript : MonoBehaviourPunCallbacks
     IEnumerator CountDown()
     {
         yield return new WaitForSeconds(8);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            photonView.RPC("RPC_Stand", RpcTarget.AllBuffered);
-        }
+       photonView.RPC("RPC_Stand", RpcTarget.AllBuffered);
+        
     }
     
     public void Hit()
@@ -432,7 +433,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
             current = 0;
         }
         checkRound();
-        if(PhotonNetwork.IsMasterClient)
+        if(current == 0)
             lastRoutine = StartCoroutine(CountDown());
     }
 
@@ -472,7 +473,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
             current = 0;
         }
         checkRound();
-        if(PhotonNetwork.IsMasterClient)
+        if(current == 0)
             lastRoutine = StartCoroutine(CountDown());
     }
     
