@@ -21,7 +21,7 @@ public class ThirdWebManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SDK=new ThirdwebSDK("goerli");
+        SDK=new ThirdwebSDK("mumbai");
     }
 
     // Update is called once per frame
