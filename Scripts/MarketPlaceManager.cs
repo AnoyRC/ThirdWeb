@@ -14,7 +14,7 @@ public class MarketPlaceManager : MonoBehaviour
     string addressShort="0x000.....00000";
     public TextMeshProUGUI tokenBalance;
     string balance="0";
-
+    public Button Buy;
     public Button Buy100;
     public Button Buy200;
     public Button Buy500;
