@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using System;
+using TMPro;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class PlayerScript : MonoBehaviour
     DealerScript script;
     public Button hit;
     public Button stand;
+    public GameObject your;
+    public GameObject turn;
     PhotonView PV;
     GameObject[] Players;
 
@@ -31,6 +34,21 @@ public class PlayerScript : MonoBehaviour
         if (Dealer)
         {
             script = Dealer.GetComponent<DealerScript>();
+            if (GameObject.ReferenceEquals(script.Players[1], gameObject))
+            {
+                your.SetActive(true);
+                turn.SetActive(true);
+                if (script.current == 1)
+                {
+                    your.GetComponentInChildren<TextMeshProUGUI>().text = "Wait";
+                    turn.GetComponentInChildren<TextMeshProUGUI>().text = "Wait";
+                }
+                else
+                {
+                    your.GetComponentInChildren<TextMeshProUGUI>().text = "your";
+                    turn.GetComponentInChildren<TextMeshProUGUI>().text = "turn";
+                }
+            }
         }
     }
 

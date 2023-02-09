@@ -9,7 +9,9 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Photon.Pun;
 using TMPro;
+using Thirdweb;
 using Unity.Mathematics;
+using System.Diagnostics.Contracts;
 
 public class DealerScript : MonoBehaviourPunCallbacks
 {
@@ -155,6 +157,10 @@ public class DealerScript : MonoBehaviourPunCallbacks
     public GameObject[] Timers;
     float timeRemaining = 8;
     Coroutine lastRoutine;
+    bool connected = false;
+    string address = "";
+    string[] SKbalance = new string[52];
+    string[] LMbalance = new string[52];
     // Start is called before the first frame update
     void Start()
     {
@@ -164,6 +170,36 @@ public class DealerScript : MonoBehaviourPunCallbacks
             var random = new System.Random();
             seed = random.Next(cards.Count);
             PV.RPC("RPC_generateRandom", RpcTarget.OthersBuffered, seed);
+        }
+        CheckConnected();
+    }
+
+    public async void CheckConnected()
+    {
+        connected = await ThirdWebManager.Instance.SDK.wallet.IsConnected();
+        Debug.Log(connected);
+
+        address = await ThirdWebManager.Instance.SDK.wallet.GetAddress();
+        Debug.Log(address);
+        var x = await ThirdWebManager.Instance.SDK.wallet.GetBalance("0x3c988602f42C894a1f5B08491b03EE6F2C261CAb");
+        Debug.Log(x);
+    }
+
+    public async void getBalanceSK()
+    {
+        var contractSK = ThirdWebManager.Instance.SDK.GetContract("0xb48fAf5A2B3Ef7a28919AB45e93e9Da1F90dA598").ERC1155;
+        for(int i = 0; i < SKbalance.Length; i++)
+        {
+            SKbalance[i] = await contractSK.Balance(i.ToString());
+        }
+    }
+
+    public async void getBalanceLM()
+    {
+        var contractSK = ThirdWebManager.Instance.SDK.GetContract("0xA958176D10b9F3d157b8afed0e019bba74D5F9bA").ERC1155;
+        for (int i = 0; i < LMbalance.Length; i++)
+        {
+            SKbalance[i] = await contractSK.Balance(i.ToString());
         }
     }
 
@@ -266,13 +302,13 @@ public class DealerScript : MonoBehaviourPunCallbacks
             {
                 if (GameObject.ReferenceEquals(roundWinner, Players[0]))
                 {
-                    Notifiers[0].GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 1f);
+                    Notifiers[0].GetComponent<Image>().color = new Color(0.3f, 0.6f, 0.3f, 1f);
                     Notifiers[0].GetComponentInChildren<TextMeshProUGUI>().text = "+1";
                     Notifiers[0].GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 1, 1, 1f);
                 }
                 if (GameObject.ReferenceEquals(roundWinner, Players[1]))
                 {
-                    Notifiers[1].GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 1f);
+                    Notifiers[1].GetComponent<Image>().color = new Color(0.3f, 0.6f, 0.3f, 1f);
                     Notifiers[1].GetComponentInChildren<TextMeshProUGUI>().text = "+1";
                     Notifiers[1].GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 1, 1, 1f);
                 }
@@ -394,7 +430,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
         {
             currentScore[current] += selectedNum > 10 ? 10 : selectedNum;
         }
-        Notifiers[current].GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 1f);
+        Notifiers[current].GetComponent<Image>().color = new Color(0.3f, 0.6f, 0.3f, 1f);
         Notifiers[current].GetComponentInChildren<TextMeshProUGUI>().text = "Hit";
         Notifiers[current].GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 1, 1, 1f);
         for (int i = 0; i < cardSprites.Length; i++)
@@ -466,7 +502,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
                 handsOpponent[i].GetComponent<Image>().enabled = false;
             }
         }
-        Notifiers[current].GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 1f);
+        Notifiers[current].GetComponent<Image>().color = new Color(0.6f, 0.3f, 0.3f, 1f);
         Notifiers[current].GetComponentInChildren<TextMeshProUGUI>().text = "STAND";
         Notifiers[current].GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 1, 1, 1f);
         turnCaller[Players[current]] = false;
