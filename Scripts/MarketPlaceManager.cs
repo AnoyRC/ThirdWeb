@@ -56,14 +56,14 @@ public class MarketPlaceManager : MonoBehaviour
 
     Pack GetPackContract(string listing)
     {
-        return listing == "3" ? ThirdWebManager.Instance.SDK.GetContract("0x2dDCb0F088312eEa656783FCbdC7e20F8Fd9cbE5").pack :
+        return listing == "7" ? ThirdWebManager.Instance.SDK.GetContract("0x2dDCb0F088312eEa656783FCbdC7e20F8Fd9cbE5").pack :
              ThirdWebManager.Instance.SDK.GetContract("0x338656979086953eb44eC4Fb39649A4e06742521").pack;
     }
 
     async Task<ERC1155Reward> OpenPack(string listing)
     {
         Pack packContract=GetPackContract(listing);
-        var result=await packContract.Open("0","1");
+        var result = await packContract.Open("0","1");
         return result.erc1155Rewards[0];
     }
     
@@ -89,7 +89,7 @@ public class MarketPlaceManager : MonoBehaviour
         }
         catch (System.Exception error)
         {
-            Debug.Log(error);
+            Debug.Log("Error Opening Pack :" + error);
         }
     }
 
