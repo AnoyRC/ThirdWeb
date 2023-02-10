@@ -83,4 +83,13 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         balance=x.displayValue;
         Debug.Log(x.displayValue);
     }
+    public void ToBetting()
+    {
+        PhotonNetwork.LoadLevel("BettingRound");
+    }
+
+    public void ToLegacy()
+    {
+        PhotonNetwork.LoadLevel("LegacyRound");
+    }
 }
