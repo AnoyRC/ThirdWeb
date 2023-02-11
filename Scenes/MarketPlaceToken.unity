@@ -1027,6 +1027,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   addressTxt: {fileID: 1873207274}
   tokenBalance: {fileID: 1202460077}
+  CrateOpenDialog: {fileID: 877874790}
+  ClaimDialog: {fileID: 1866242880}
 --- !u!4 &279640391
 Transform:
   m_ObjectHideFlags: 0

@@ -17,6 +17,8 @@ public class MarketPlaceManager : MonoBehaviour
     string addressShort="0x000.....00000";
     public TextMeshProUGUI tokenBalance;
     string balance="0";
+    public GameObject CrateOpenDialog;
+    public GameObject ClaimDialog;
     // Start is called before the first frame update
     void Start()
     {
@@ -64,6 +66,8 @@ public class MarketPlaceManager : MonoBehaviour
     {
         Pack packContract=GetPackContract(listing);
         var result = await packContract.Open("0","1");
+        ClaimDialog.SetActive(true);
+        StartCoroutine(remove());
         return result.erc1155Rewards[0];
     }
     
@@ -74,25 +78,41 @@ public class MarketPlaceManager : MonoBehaviour
 
     async Task BuyPackFromMarketPlace(string listing)
     {
-        Debug.Log("Purchasing Pack from Marketplace");
+        CrateOpenDialog.GetComponent<TextMeshProUGUI>().text = "Purchasing Pack from Marketplace";
         Marketplace marketplace = GetMarketPlaceContract();
         await marketplace.BuyListing(listing, 1);
-        Debug.Log("Purchase Complete");
+        CrateOpenDialog.GetComponent<TextMeshProUGUI>().text = "Purchase Complete";
     }
 
     async Task BuyAndOpenPack(string listing)
     {
         try
         {
+            CrateOpenDialog.SetActive(true);
             await BuyPackFromMarketPlace(listing);
             await OpenPack(listing);
         }
         catch (System.Exception error)
         {
-            Debug.Log("Error Opening Pack :" + error);
+            CrateOpenDialog.GetComponent<TextMeshProUGUI>().text = "Error Opening Pack";
+            Debug.Log(error);
         }
     }
 
+    IEnumerator remove()
+    {
+        yield return new WaitForSeconds(10);
+        CrateOpenDialog.SetActive(false);
+        ClaimDialog.SetActive(false);
+        
+    }
+
+    public void Claim()
+    {
+        CrateOpenDialog.SetActive(false);
+        ClaimDialog.SetActive(false);
+    }
+    
     public async void BuyLootbox(string listing)
     {
         await BuyAndOpenPack(listing);

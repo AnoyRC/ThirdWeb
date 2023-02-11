@@ -159,8 +159,72 @@ public class DealerScript : MonoBehaviourPunCallbacks
     Coroutine lastRoutine;
     bool connected = false;
     string address = "";
-    string[] SKbalance = new string[52];
-    string[] LMbalance = new string[52];
+    string[] SKbalance = new string[52]{
+        "0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",
+        "0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",
+        "0","0","0","0","0","0","0","0","0","0","0","0"
+    };
+    string[] LMbalance = new string[52]
+    {
+        "0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",
+        "0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",
+        "0","0","0","0","0","0","0","0","0","0","0","0"
+    };
+    Dictionary<string, int> indexer = new Dictionary<string, int>()
+    {
+        {"1_C",0},
+        {"2_C",1},
+        {"3_C",2},
+        {"4_C",3},
+        {"5_C",4},
+        {"6_C",5},
+        {"7_C",6},
+        {"8_C",7},
+        {"9_C",8},
+        {"10_C",9},
+        {"11_C",10},
+        {"12_C",11},
+        {"13_C",12},
+        {"1_S",13},
+        {"2_S",14},
+        {"3_S",15},
+        {"4_S",16},
+        {"5_S",17},
+        {"6_S",18},
+        {"7_S",19},
+        {"8_S",20},
+        {"9_S",21},
+        {"10_S",22},
+        {"11_S",23},
+        {"12_S",24},
+        {"13_S",25},
+        {"1_H",26},
+        {"2_H",27},
+        {"3_H",28},
+        {"4_H",29},
+        {"5_H",30},
+        {"6_H",31},
+        {"7_H",32},
+        {"8_H",33},
+        {"9_H",34},
+        {"10_H",35},
+        {"11_H",36},
+        {"12_H",37},
+        {"13_H",38},
+        {"1_D",39},
+        {"2_D",40},
+        {"3_D",41},
+        {"4_D",42},
+        {"5_D",43},
+        {"6_D",44},
+        {"7_D",45},
+        {"8_D",46},
+        {"9_D",47},
+        {"10_D",48},
+        {"11_D",49},
+        {"12_D",50},
+        {"13_D",51},
+    };
     // Start is called before the first frame update
     void Start()
     {
@@ -187,19 +251,19 @@ public class DealerScript : MonoBehaviourPunCallbacks
 
     public async void getBalanceSK()
     {
-        var contractSK = ThirdWebManager.Instance.SDK.GetContract("0xb48fAf5A2B3Ef7a28919AB45e93e9Da1F90dA598").ERC1155;
+        var contractSK = ThirdWebManager.Instance.SDK.GetContract("0xb48fAf5A2B3Ef7a28919AB45e93e9Da1F90dA598");
         for(int i = 0; i < SKbalance.Length; i++)
         {
-            SKbalance[i] = await contractSK.Balance(i.ToString());
+            SKbalance[i] = await contractSK.ERC1155.BalanceOf(address,i.ToString());
         }
     }
 
     public async void getBalanceLM()
     {
-        var contractSK = ThirdWebManager.Instance.SDK.GetContract("0xA958176D10b9F3d157b8afed0e019bba74D5F9bA").ERC1155;
+        var contractLM = ThirdWebManager.Instance.SDK.GetContract("0xA958176D10b9F3d157b8afed0e019bba74D5F9bA");
         for (int i = 0; i < LMbalance.Length; i++)
         {
-            SKbalance[i] = await contractSK.Balance(i.ToString());
+            LMbalance[i] = await contractLM.ERC1155.BalanceOf(address, i.ToString());
         }
     }
 
@@ -235,6 +299,11 @@ public class DealerScript : MonoBehaviourPunCallbacks
                 lastRoutine = StartCoroutine(CountDown());
             }
             matchMaking = true;
+            if (address != "")
+            {
+                getBalanceSK();
+                getBalanceLM();
+            }
         }
         if (current == 0)
         {
@@ -444,14 +513,72 @@ public class DealerScript : MonoBehaviourPunCallbacks
             {
                 str = selectedNum.ToString();
             }
-            if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 0)
+            string balanceSK = SKbalance[indexer[selectedNum.ToString() + "_" + selectedSymbol]];
+            string balanceLM = LMbalance[indexer[selectedNum.ToString() + "_" + selectedSymbol]];
+            if (int.Parse(balanceSK) > 0 && int.Parse(balanceLM) > 0)
             {
-                hands[k].sprite = cardSprites[i];
-                hands[k].GetComponent<Image>().enabled = true;
-                if (k > 1)
-                    hands[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                k++;
-                break;
+                var rand = new System.Random();
+                var skin = rand.Next(0, 1);
+                if(skin == 0)
+                {
+                    if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 0 && cardSprites[i].name.Contains("SK"))
+                    {
+                        hands[k].sprite = cardSprites[i];
+                        hands[k].GetComponent<Image>().enabled = true;
+                        if (k > 1)
+                            hands[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                        k++;
+                        break;
+                    }
+                }
+                if (skin == 1)
+                {
+                    if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 0 && cardSprites[i].name.Contains("LM"))
+                    {
+                        hands[k].sprite = cardSprites[i];
+                        hands[k].GetComponent<Image>().enabled = true;
+                        if (k > 1)
+                            hands[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                        k++;
+                        break;
+                    }
+                }
+            }
+            else if(int.Parse(balanceSK) > 0)
+            {
+                if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 0 && cardSprites[i].name.Contains("SK"))
+                {
+                    hands[k].sprite = cardSprites[i];
+                    hands[k].GetComponent<Image>().enabled = true;
+                    if (k > 1)
+                        hands[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    k++;
+                    break;
+                }
+            }
+            else if(int.Parse(balanceLM) > 0)
+            {
+                if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 0 && cardSprites[i].name.Contains("LM"))
+                {
+                    hands[k].sprite = cardSprites[i];
+                    hands[k].GetComponent<Image>().enabled = true;
+                    if (k > 1)
+                        hands[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    k++;
+                    break;
+                }
+            }
+            else
+            {
+                if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 0)
+                {
+                    hands[k].sprite = cardSprites[i];
+                    hands[k].GetComponent<Image>().enabled = true;
+                    if (k > 1)
+                        hands[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    k++;
+                    break;
+                }
             }
             if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1)
             {

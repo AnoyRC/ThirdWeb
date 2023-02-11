@@ -25,7 +25,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     void  Update()
     {
         addressTxt.text=addressShort;
-        tokenBalance.text=balance;
+        tokenBalance.text = balance.Length > 5 ? balance[..5] : balance;
         if (connected && addressTxt.text!="0x000.....00000")
         {
             ConnectWindow.GetComponent<Image>().color = Color.Lerp(ConnectWindow.GetComponent<Image>().color, new Color(0, 0, 0, 0f), 0.02f);
