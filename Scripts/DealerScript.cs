@@ -12,9 +12,12 @@ using TMPro;
 using Thirdweb;
 using Unity.Mathematics;
 using System.Diagnostics.Contracts;
+using System.Runtime.InteropServices;
+using Photon.Realtime;
 
 public class DealerScript : MonoBehaviourPunCallbacks
 {
+    
     [SerializeField] bool matchMaking = false;
     public GameObject[] Players;
     public Sprite[] cardSprites;
@@ -155,10 +158,11 @@ public class DealerScript : MonoBehaviourPunCallbacks
     public TextMeshProUGUI TurnNotifier;
     public GameObject WinnerDialog;
     public GameObject[] Timers;
-    float timeRemaining = 8;
+    float timeRemaining = 12;
     Coroutine lastRoutine;
     bool connected = false;
     string address = "";
+    public AudioSource music;
     string[] SKbalance = new string[52]{
         "0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",
         "0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",
@@ -270,6 +274,12 @@ public class DealerScript : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
+        if(matchMaking == true && Players[1] == null)
+        {
+            PhotonNetwork.Disconnect();
+            WinnerDialog.SetActive(true);
+            WinnerDialog.GetComponentInChildren<TextMeshProUGUI>().text = "Opponent Disconnected";
+        }
         if (winner)
         {
             PhotonNetwork.Disconnect();
@@ -298,6 +308,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
             {
                 lastRoutine = StartCoroutine(CountDown());
             }
+            music.Play();
             matchMaking = true;
             if (address != "")
             {
@@ -320,7 +331,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
         }
 
  
-        Timers[current].GetComponent<Slider>().value = (timeRemaining / 8);
+        Timers[current].GetComponent<Slider>().value = (timeRemaining / 12);
         Timers[current].SetActive(true);
         Timers[current == 0 ? 1 : 0].SetActive(false);
         
@@ -443,7 +454,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
 
     IEnumerator CountDown()
     {
-        yield return new WaitForSeconds(8);
+        yield return new WaitForSeconds(12);
        photonView.RPC("RPC_Stand", RpcTarget.AllBuffered);
         
     }
@@ -453,7 +464,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
         if (lastRoutine != null)
             StopCoroutine(lastRoutine);
         
-        timeRemaining = 8;
+        timeRemaining = 12;
         HiddenCover.SetActive(true);
         if (k == 0 && l == 0)
         {
@@ -613,7 +624,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
         if (lastRoutine != null)
             StopCoroutine(lastRoutine);
  
-        timeRemaining = 8;
+        timeRemaining = 12;
         HiddenCover.SetActive(true);
         var MainScores = GameObject.FindGameObjectWithTag("MainPlayerScore").GetComponent<TextMeshProUGUI>();
         MainScores.text = currentScore[0].ToString();
@@ -656,5 +667,12 @@ public class DealerScript : MonoBehaviourPunCallbacks
     {
         Hit();
         Debug.Log("Hit");
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        base.OnDisconnected(cause);
+        WinnerDialog.SetActive(true);
+        WinnerDialog.GetComponentInChildren<TextMeshProUGUI>().text = "Disconnected From Server";
     }
 }

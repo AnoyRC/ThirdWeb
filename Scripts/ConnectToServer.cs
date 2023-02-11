@@ -6,6 +6,7 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 using Thirdweb;
+using Photon.Realtime;
 
 public class ConnectToServer : MonoBehaviourPunCallbacks
 {
@@ -91,5 +92,11 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public void ToLegacy()
     {
         PhotonNetwork.LoadLevel("LegacyRound");
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        base.OnDisconnected(cause);
+        PhotonNetwork.ConnectUsingSettings();
     }
 }

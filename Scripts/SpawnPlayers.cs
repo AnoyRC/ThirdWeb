@@ -1,13 +1,18 @@
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class SpawnPlayers : MonoBehaviourPunCallbacks
 {
+    [DllImport("__Internal")]
+    private static extern void AlertMessage(string str);
     public GameObject playerPrefab;
     public GameObject dealer;
     public GameObject spawn;
+    public GameObject infoPanel;
     public GameObject[] SpawnPoints;
     // Start is called before the first frame update
     void Start()
@@ -30,6 +35,11 @@ public class SpawnPlayers : MonoBehaviourPunCallbacks
         {
             dealer.SetActive(true);
         }
+    }
+
+    public void infoPanelClose()
+    {
+        infoPanel.SetActive(false);
     }
 
 }

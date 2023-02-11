@@ -25,6 +25,7 @@ public class WinnerWindow : MonoBehaviour
         var dealer = GameObject.FindGameObjectWithTag("Dealer");
         if (dealer == null) return;
         var dealerScript = dealer.GetComponent<DealerScript>();
+        if (dealerScript.winner == null) return;
         gameObject.GetComponentInChildren<TextMeshProUGUI>().text = GameObject.ReferenceEquals(dealerScript.winner, dealerScript.Players[0]) ? "You Win!" : "You Lose!";
     }
 
