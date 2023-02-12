@@ -174,6 +174,17 @@ public class DealerScript : MonoBehaviourPunCallbacks
         "0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",
         "0","0","0","0","0","0","0","0","0","0","0","0"
     };
+    string[] SKbalanceEnemy = new string[52]{
+        "0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",
+        "0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",
+        "0","0","0","0","0","0","0","0","0","0","0","0"
+    };
+    string[] LMbalanceEnemy = new string[52]
+    {
+        "0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",
+        "0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0",
+        "0","0","0","0","0","0","0","0","0","0","0","0"
+    };
     Dictionary<string, int> indexer = new Dictionary<string, int>()
     {
         {"1_C",0},
@@ -229,6 +240,8 @@ public class DealerScript : MonoBehaviourPunCallbacks
         {"12_D",50},
         {"13_D",51},
     };
+    public AudioSource[] sounds;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -240,6 +253,19 @@ public class DealerScript : MonoBehaviourPunCallbacks
             PV.RPC("RPC_generateRandom", RpcTarget.OthersBuffered, seed);
         }
         CheckConnected();
+    }
+
+    [PunRPC]
+    public void SetOpponentSkin(string type, int index, string value)
+    {
+        if (type == "SK")
+        {
+            SKbalanceEnemy[index] = value;
+        }
+        else
+        {
+            LMbalanceEnemy[index] = value;
+        }
     }
 
     public async void CheckConnected()
@@ -259,6 +285,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
         for(int i = 0; i < SKbalance.Length; i++)
         {
             SKbalance[i] = await contractSK.ERC1155.BalanceOf(address,i.ToString());
+            PV.RPC("SetOpponentSkin", RpcTarget.OthersBuffered, "SK", i, SKbalance[i]);
         }
     }
 
@@ -268,6 +295,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
         for (int i = 0; i < LMbalance.Length; i++)
         {
             LMbalance[i] = await contractLM.ERC1155.BalanceOf(address, i.ToString());
+            PV.RPC("SetOpponentSkin", RpcTarget.OthersBuffered, "LM", i, LMbalance[i]);
         }
     }
 
@@ -465,6 +493,8 @@ public class DealerScript : MonoBehaviourPunCallbacks
             StopCoroutine(lastRoutine);
         
         timeRemaining = 12;
+
+        sounds[0].Play();
         HiddenCover.SetActive(true);
         if (k == 0 && l == 0)
         {
@@ -491,6 +521,7 @@ public class DealerScript : MonoBehaviourPunCallbacks
         if (cards.Count == 0)
         {
             cards = new List<Tuple<int, char>>(resetCards);
+            sounds[2].Play();
             Notifiers[current == 0 ? 1 : 0].GetComponent<Image>().color = new Color(0.1f, 0.1f, 0.1f, 1f);
             Notifiers[current == 0 ? 1 : 0].GetComponentInChildren<TextMeshProUGUI>().text = "Reshuffling";
             Notifiers[current == 0 ? 1 : 0].GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 1, 1, 1f);
@@ -591,14 +622,73 @@ public class DealerScript : MonoBehaviourPunCallbacks
                     break;
                 }
             }
-            if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1)
+
+            string balanceSKEnemy = SKbalanceEnemy[indexer[selectedNum.ToString() + "_" + selectedSymbol]];
+            string balanceLMEnemy = LMbalanceEnemy[indexer[selectedNum.ToString() + "_" + selectedSymbol]];
+            if (int.Parse(balanceSKEnemy) > 0 && int.Parse(balanceLMEnemy) > 0)
             {
-                handsOpponent[l].sprite = cardSprites[i];
-                handsOpponent[l].GetComponent<Image>().enabled = true;
-                if (l > 1)
-                    handsOpponent[l - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                l++;
-                break;
+                var rand = new System.Random();
+                var skin = rand.Next(0, 1);
+                if (skin == 0)
+                {
+                    if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1 && cardSprites[i].name.Contains("SK"))
+                    {
+                        handsOpponent[k].sprite = cardSprites[i];
+                        handsOpponent[k].GetComponent<Image>().enabled = true;
+                        if (k > 1)
+                            handsOpponent[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                        k++;
+                        break;
+                    }
+                }
+                if (skin == 1)
+                {
+                    if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1 && cardSprites[i].name.Contains("LM"))
+                    {
+                        handsOpponent[k].sprite = cardSprites[i];
+                        handsOpponent[k].GetComponent<Image>().enabled = true;
+                        if (k > 1)
+                            handsOpponent[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                        k++;
+                        break;
+                    }
+                }
+            }
+            else if (int.Parse(balanceSKEnemy) > 0)
+            {
+                if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1 && cardSprites[i].name.Contains("SK"))
+                {
+                    handsOpponent[k].sprite = cardSprites[i];
+                    handsOpponent[k].GetComponent<Image>().enabled = true;
+                    if (k > 1)
+                        handsOpponent[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    k++;
+                    break;
+                }
+            }
+            else if (int.Parse(balanceLMEnemy) > 0)
+            {
+                if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1 && cardSprites[i].name.Contains("LM"))
+                {
+                    handsOpponent[k].sprite = cardSprites[i];
+                    handsOpponent[k].GetComponent<Image>().enabled = true;
+                    if (k > 1)
+                        handsOpponent[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    k++;
+                    break;
+                }
+            }
+            else
+            {
+                if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1)
+                {
+                    handsOpponent[k].sprite = cardSprites[i];
+                    handsOpponent[k].GetComponent<Image>().enabled = true;
+                    if (k > 1)
+                        handsOpponent[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    k++;
+                    break;
+                }
             }
         }
         var MainScores = GameObject.FindGameObjectWithTag("MainPlayerScore").GetComponent<TextMeshProUGUI>();
@@ -625,6 +715,8 @@ public class DealerScript : MonoBehaviourPunCallbacks
             StopCoroutine(lastRoutine);
  
         timeRemaining = 12;
+
+        sounds[1].Play();
         HiddenCover.SetActive(true);
         var MainScores = GameObject.FindGameObjectWithTag("MainPlayerScore").GetComponent<TextMeshProUGUI>();
         MainScores.text = currentScore[0].ToString();

@@ -46,6 +46,7 @@ MonoBehaviour:
   - RPC_Hit
   - RPC_Stand
   - RPC_generateRandom
+  - SetOpponentSkin
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
