@@ -633,11 +633,11 @@ public class DealerScript : MonoBehaviourPunCallbacks
                 {
                     if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1 && cardSprites[i].name.Contains("SK"))
                     {
-                        handsOpponent[k].sprite = cardSprites[i];
-                        handsOpponent[k].GetComponent<Image>().enabled = true;
-                        if (k > 1)
-                            handsOpponent[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                        k++;
+                        handsOpponent[l].sprite = cardSprites[i];
+                        handsOpponent[l].GetComponent<Image>().enabled = true;
+                        if (l > 1)
+                            handsOpponent[l - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                        l++;
                         break;
                     }
                 }
@@ -645,11 +645,11 @@ public class DealerScript : MonoBehaviourPunCallbacks
                 {
                     if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1 && cardSprites[i].name.Contains("LM"))
                     {
-                        handsOpponent[k].sprite = cardSprites[i];
-                        handsOpponent[k].GetComponent<Image>().enabled = true;
-                        if (k > 1)
-                            handsOpponent[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                        k++;
+                        handsOpponent[l].sprite = cardSprites[i];
+                        handsOpponent[l].GetComponent<Image>().enabled = true;
+                        if (l > 1)
+                            handsOpponent[l - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                        l++;
                         break;
                     }
                 }
@@ -658,11 +658,11 @@ public class DealerScript : MonoBehaviourPunCallbacks
             {
                 if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1 && cardSprites[i].name.Contains("SK"))
                 {
-                    handsOpponent[k].sprite = cardSprites[i];
-                    handsOpponent[k].GetComponent<Image>().enabled = true;
-                    if (k > 1)
-                        handsOpponent[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                    k++;
+                    handsOpponent[l].sprite = cardSprites[i];
+                    handsOpponent[l].GetComponent<Image>().enabled = true;
+                    if (l > 1)
+                        handsOpponent[l - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    l++;
                     break;
                 }
             }
@@ -670,11 +670,11 @@ public class DealerScript : MonoBehaviourPunCallbacks
             {
                 if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1 && cardSprites[i].name.Contains("LM"))
                 {
-                    handsOpponent[k].sprite = cardSprites[i];
-                    handsOpponent[k].GetComponent<Image>().enabled = true;
-                    if (k > 1)
-                        handsOpponent[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                    k++;
+                    handsOpponent[l].sprite = cardSprites[i];
+                    handsOpponent[l].GetComponent<Image>().enabled = true;
+                    if (l > 1)
+                        handsOpponent[l - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    l++;
                     break;
                 }
             }
@@ -682,11 +682,11 @@ public class DealerScript : MonoBehaviourPunCallbacks
             {
                 if (cardSprites[i].name.Contains(str) && cardSprites[i].name.Contains(selectedSymbol) && current == 1)
                 {
-                    handsOpponent[k].sprite = cardSprites[i];
-                    handsOpponent[k].GetComponent<Image>().enabled = true;
-                    if (k > 1)
-                        handsOpponent[k - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                    k++;
+                    handsOpponent[l].sprite = cardSprites[i];
+                    handsOpponent[l].GetComponent<Image>().enabled = true;
+                    if (l > 1)
+                        handsOpponent[l - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    l++;
                     break;
                 }
             }

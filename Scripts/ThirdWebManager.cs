@@ -9,6 +9,8 @@ public class ThirdWebManager : MonoBehaviour
 
     public ThirdwebSDK SDK;
 
+    public GameObject InfoTab;
+
     private void Awake()
     {
         if(Instance != null)
@@ -28,5 +30,10 @@ public class ThirdWebManager : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void ShowAndHide()
+    {
+        InfoTab.SetActive(!InfoTab.activeSelf);
     }
 }

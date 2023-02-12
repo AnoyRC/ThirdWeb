@@ -30,7 +30,7 @@ public class MarketPlaceManager : MonoBehaviour
     void Update()
     {
         addressTxt.text=addressShort;
-        tokenBalance.text=balance;
+        tokenBalance.text = balance.Length > 5 ? balance[..5] : balance;
     }
 
     public async void CheckConnected()
@@ -43,7 +43,6 @@ public class MarketPlaceManager : MonoBehaviour
         Debug.Log(addressShort);
         var x=await ThirdWebManager.Instance.SDK.wallet.GetBalance("0x3c988602f42C894a1f5B08491b03EE6F2C261CAb");
         balance=x.displayValue;
-        Debug.Log(x.displayValue);
     }
 
     public async void BuyToken(string amount)
@@ -54,6 +53,7 @@ public class MarketPlaceManager : MonoBehaviour
         var x=await ThirdWebManager.Instance.SDK.wallet.GetBalance("0x3c988602f42C894a1f5B08491b03EE6F2C261CAb");
         balance=x.displayValue;
         Debug.Log(x.displayValue);
+        CheckConnected();
     }
 
     Pack GetPackContract(string listing)
@@ -88,9 +88,11 @@ public class MarketPlaceManager : MonoBehaviour
     {
         try
         {
+            CheckConnected();
             CrateOpenDialog.SetActive(true);
             await BuyPackFromMarketPlace(listing);
             await OpenPack(listing);
+            CheckConnected();
         }
         catch (System.Exception error)
         {
@@ -120,6 +122,7 @@ public class MarketPlaceManager : MonoBehaviour
 
     public void ToMainMenu()
     {
+        PhotonNetwork.Disconnect();
         PhotonNetwork.LoadLevel("SampleScene");
     }
 }
