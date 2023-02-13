@@ -137,9 +137,10 @@ public class MarketPlaceManager : MonoBehaviour
                 var contractSK = ThirdWebManager.Instance.SDK.GetContract("0xb48fAf5A2B3Ef7a28919AB45e93e9Da1F90dA598");
                 for (int j = 0; j < 52; j++)
                 {
-                    if(Balance[i, j] != await contractSK.ERC1155.BalanceOf(address, j.ToString()))
+                    string CurBalance = await contractSK.ERC1155.BalanceOf(address, j.ToString());
+                    if (Balance[i, j] != CurBalance)
                     {
-                        Balance[i, j] = await contractSK.ERC1155.BalanceOf(address, j.ToString());
+                        Balance[i, j] = CurBalance;
                         selected[1] = j.ToString();
                         selected[2] = "SK";
                         break;
@@ -152,9 +153,10 @@ public class MarketPlaceManager : MonoBehaviour
                 var contractLM = ThirdWebManager.Instance.SDK.GetContract("0xA958176D10b9F3d157b8afed0e019bba74D5F9bA");
                 for (int j = 0; j < 52; j++)
                 {
-                    if(Balance[i, j] != await contractLM.ERC1155.BalanceOf(address, j.ToString()))
+                    string CurBalance = await contractLM.ERC1155.BalanceOf(address, j.ToString());
+                    if (Balance[i, j] != CurBalance)
                     {
-                        Balance[i, j] = await contractLM.ERC1155.BalanceOf(address, j.ToString());
+                        Balance[i, j] = CurBalance;
                         selected[1] = j.ToString();
                         selected[2] = "LM";
                         break;
@@ -185,8 +187,14 @@ public class MarketPlaceManager : MonoBehaviour
             ConnectWindow.GetComponentInChildren<TextMeshProUGUI>().color = Color.Lerp(ConnectWindow.GetComponentInChildren<TextMeshProUGUI>().color, new Color(1, 1, 1, 0f), 0.02f);
             StartCoroutine(RemoveConnect());
         }
+        UpdateCp();
     }
 
+    async void UpdateCp()
+    {
+        var x = await ThirdWebManager.Instance.SDK.wallet.GetBalance("0x3c988602f42C894a1f5B08491b03EE6F2C261CAb");
+        balance = x.displayValue;
+    }
     IEnumerator RemoveConnect()
     {
         yield return new WaitForSeconds(2);
@@ -201,8 +209,7 @@ public class MarketPlaceManager : MonoBehaviour
         address = await ThirdWebManager.Instance.SDK.wallet.GetAddress();
         addressShort = address[..5] + "....." + address[(address.Length - 5)..];
         Debug.Log(addressShort);
-        var x = await ThirdWebManager.Instance.SDK.wallet.GetBalance("0x3c988602f42C894a1f5B08491b03EE6F2C261CAb");
-        balance = x.displayValue;
+        
         if(connected)
             await getBalance();
     }

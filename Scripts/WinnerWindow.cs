@@ -31,6 +31,7 @@ public class WinnerWindow : MonoBehaviour
 
     public void loadScene()
     {
+        PhotonNetwork.Disconnect();
         PhotonNetwork.LoadLevel("SampleScene");
     }
 }

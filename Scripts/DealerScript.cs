@@ -310,7 +310,6 @@ public class DealerScript : MonoBehaviourPunCallbacks
         }
         if (winner)
         {
-            PhotonNetwork.Disconnect();
             WinnerDialog.SetActive(true);
         }
         if (Players.Length != 2)
